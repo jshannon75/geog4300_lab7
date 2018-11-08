@@ -1,0 +1,130 @@
+---
+title: 'Geog6300: Lab 6'
+output: github_document
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+## Correlation and regression
+
+**Due:** Wednesday, Nov. 29
+
+**Value:** 30 points
+
+**Overview:**
+This lab introduces you to NHGIS and the type of analysis you'll be doing in your final project this semester. You'll also be applying techniques for correlation and OLS regression. Think of this as the first part of your final project.
+
+###Part 1: Importing data and descriptive statistics###
+For this lab, we'll be looking at American Community Survey data for congressional precincts from the 2011-2015 pooled sample. You can access this and pretty much all census data through the IPUMS NHGIS website: https://www.nhgis.org. For this lab, the data's already been downloaded for you. The boundary file has also been simplified to speed plotting of the data.
+
+There's three files for you to use in this analysis: [a codebook with metadata](https://github.com/jshannon75/geog4300/raw/master/Labs/Lab%205_%20Correlation%20and%20regression/nhgis0052_ds215_20155_2015_cd113th-114th_codebook.txt), a csv file, and a GIS boundary file in geojson format. You can load the two files using the following commands. You'll also need to load the development version of ggplot for plotting spatial data, so uncomment that line if you haven't done it already.
+
+```{r setup, message=FALSE, warning=FALSE}
+library(sf)
+library(tidyverse)
+census_data<-read_csv("nhgis0052_ds215_20155_2015_cd113th-114th.csv")
+census_shape<-st_read("districts_2012.geojson", quiet=TRUE) %>% 
+  st_transform(5070) #Changes to a appropriate projection--US Albers Equal Area
+```
+
+You already mapped spatial data with ggplot earlier this semester, but as a reminder, it looks something like this. We are mapping a normalized version of the Polsby-Popper metric of district compactness, often used for identifying potential gerrymanders [link](https://www.azavea.com/blog/2016/07/11/measuring-district-compactness-postgis). 
+
+Note that here, we're using scale_fill_viridis_c from the viridis library, which imports the color schemes of Matlab for continuous data. You can use that as well if you'd like.
+
+```{r sf_data_plot}
+ggplot(census_shape) +
+  geom_sf(aes(fill=polsby_scale))+
+  scale_fill_viridis_c()
+```
+
+Working with the data file, select only the following variables needed for your analysis. Refer to the codebook document to find the variable names in the dataset:
+
+* GISJOIN and STATE fields
+* Race: Total population, Non-Hispanic White, Non-Hispanic Black/African-American, and Hispanic or Latino
+* Poverty: Total population, Population at 200% or more of the poverty line
+
+Now create rates from these data, using the raw counts and the total population using mutate. You should end up with the following variables:
+
+* % non-Hispanic white
+* % non-Hispanic black
+* % Hispanic/Latino
+* % < 200% of the poverty line
+
+**Question 1 (2 points)** _Select only the variables listed above and then create the listed rates. Call the header of the resulting table when done._
+
+```{r}
+#Code goes here.
+```
+
+You can now connect your table with the geographic boundaries you imported in question 1. After doing so, you can plot each variable on a small multiples map using ggplot.
+
+**Question 2 (3 points)** _Use right_join to connect the geographic district boundaries to the district table from question 1. Use select to choose the four census rate variables and the polsby variable. Then scale the census variables to create z scores. This will create a consistent range of values across variables for the next step of the process. Call the head of the table when done._
+
+```{r}
+#Code goes here.
+```
+
+**Question 3 (3 points)** _Use gather to transform the four scaled census variables to long format so you can plot them. Then, using facet_wrap with ggplot and geom_sf, plot the distribution of each of the four scaled census variables on a single small multiples map_
+
+```{r}
+#Code goes here.
+```
+
+**Question 4 (3 points)** _Based on the map from question 2, summarise two main patterns you see in the spatial distribution of these data. Be sure to make specific references to your data to illustrate your points._
+
+{Response goes here}
+
+###Part 2: Correlation###
+
+Next, you'll be assessing the correlation of these variables.
+
+**Question 5 (3 points):** _Assess the normality of your five variables of interest using qq plots. Explain how your results suggest the use of parametric or non-parametric staistical tests._ 
+
+```{r}
+#Code goes here.
+```
+
+{Response goes here}
+
+**Question 6 (2 points)** _Create a data frame with just your five variables of interest (census rates plus polsby). Then use rcorr to create a correlation matrix with the appropriate measure (Spearman or Pearson)._
+
+```{r}
+#Code goes here.
+```
+
+**Question 7 (2 points)** _Interpret the results your correlation matrix shows, focusing on both the magnitude and direction of the correlation._
+
+### Part 3: OLS Regression
+
+Lastly, we'll use regression to determine how the census variables in this dataset are associated with the compactness of political districts.
+
+**Question 8 (3 points)** *Create a data frame that has the five variables of interest and the geometry column. Create an OLS regression model from this data frame that has the Polsby compactness score as the dependent variable and the others as dependent variables. Call a summary of the model so your results appear in the response document.*
+
+```{r}
+#Code goes here.
+```
+
+**Question 9 (2 points)** *Interpret your regression model, focusing on the magnitude, direction, and significance of model coefficients and the overall power of the model.*
+
+{Response goes here}
+
+**Question 10 (2 points)** _Check your for the normality of residuals and heterosketasticity using the tests described in class._ 
+
+```{r}
+#Code goes here.
+```
+
+**Question 11 (2 points)** _Add the residuals as a new variable in your model data and plot their spatial distribution using ggplot._
+
+```{r}
+#Code goes here.
+```
+
+**Question 12 (3 points)** *Based on your results, assess how either the spatial/statistical distribution of residuals or tests for heterosketasticity may show a problem with this model. Provide one recommendation for a way this model could be improved.*
+
+{Response goes here}
+
