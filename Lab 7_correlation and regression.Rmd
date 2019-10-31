@@ -1,5 +1,5 @@
 ---
-title: 'Geog6300: Lab 6'
+title: 'Geog6300: Lab 7'
 output: github_document
 ---
 
@@ -11,12 +11,10 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Correlation and regression
 
-**Due:** Wednesday, Nov. 29
-
 **Value:** 30 points
 
 **Overview:**
-This lab introduces you to NHGIS and the type of analysis you'll be doing in your final project this semester. You'll also be applying techniques for correlation and OLS regression. Think of this as the first part of your final project.
+This lab introduces you to NHGIS and the type of analysis you may be doing in your final project this semester. You'll also be applying techniques for correlation and OLS regression. Think of this as the first taste of your final project.
 
 ###Part 1: Importing data and descriptive statistics###
 For this lab, we'll be looking at American Community Survey data for congressional precincts from the 2011-2015 pooled sample. You can access this and pretty much all census data through the IPUMS NHGIS website: https://www.nhgis.org. For this lab, the data's already been downloaded for you. The boundary file has also been simplified to speed plotting of the data.
@@ -26,8 +24,8 @@ There's three files for you to use in this analysis: [a codebook with metadata](
 ```{r setup, message=FALSE, warning=FALSE}
 library(sf)
 library(tidyverse)
-census_data<-read_csv("nhgis0052_ds215_20155_2015_cd113th-114th.csv")
-census_shape<-st_read("districts_2012.geojson", quiet=TRUE) %>% 
+census_data<-read_csv("data/nhgis0052_ds215_20155_2015_cd113th-114th.csv")
+census_shape<-st_read("data/districts_2012.geojson", quiet=TRUE) %>% 
   st_transform(5070) #Changes to a appropriate projection--US Albers Equal Area
 ```
 
@@ -54,7 +52,7 @@ Now create rates from these data, using the raw counts and the total population 
 * % Hispanic/Latino
 * % < 200% of the poverty line
 
-**Question 1 (2 points)** _Select only the variables listed above and then create the listed rates. Call the header of the resulting table when done._
+**Question 1 (2 points)** _Create a table for each county showing only the GISJOIN,STATE and rate variables listed above. Call the header of the resulting table when done._
 
 ```{r}
 #Code goes here.
@@ -62,7 +60,7 @@ Now create rates from these data, using the raw counts and the total population 
 
 You can now connect your table with the geographic boundaries you imported in question 1. After doing so, you can plot each variable on a small multiples map using ggplot.
 
-**Question 2 (3 points)** _Use right_join to connect the geographic district boundaries to the district table from question 1. Use select to choose the four census rate variables and the polsby variable. Then scale the census variables to create z scores. This will create a consistent range of values across variables for the next step of the process. Call the head of the table when done._
+**Question 2 (3 points)** _Join the district boundaries to the table from question 1.  Then scale the rates to create z scores. This will create a consistent range of values across variables for the next step of the process. Call the head of the table when done._
 
 ```{r}
 #Code goes here.
@@ -74,15 +72,15 @@ You can now connect your table with the geographic boundaries you imported in qu
 #Code goes here.
 ```
 
-**Question 4 (3 points)** _Based on the map from question 2, summarise two main patterns you see in the spatial distribution of these data. Be sure to make specific references to your data to illustrate your points._
+**Question 4 (3 points)** _Based on the map from question 3, summarise two major patterns you see in the spatial distribution of these data. Be sure to make specific references to your data to illustrate your points._
 
 {Response goes here}
 
 ###Part 2: Correlation###
 
-Next, you'll be assessing the correlation of these variables.
+Next, you'll be assessing the correlation of these variables. We'll want to remove counties in states with very few disticts (2 or less), as gerrymandering options are limited in these states
 
-**Question 5 (3 points):** _Assess the normality of your five variables of interest using qq plots. Explain how your results suggest the use of parametric or non-parametric staistical tests._ 
+**Question 5 (3 points):** _Filter out any states with 2 or less districts--you can use the STATEFP or STATE variables to group them. Then assess the normality of your five variables of interest (four census variables and the polsby_scale variable) using qq plots. Explain how your results suggest the use of parametric or non-parametric statistical tests._ 
 
 ```{r}
 #Code goes here.
@@ -90,19 +88,21 @@ Next, you'll be assessing the correlation of these variables.
 
 {Response goes here}
 
-**Question 6 (2 points)** _Create a data frame with just your five variables of interest (census rates plus polsby). Then use rcorr to create a correlation matrix with the appropriate measure (Spearman or Pearson)._
+**Question 6 (2 points)** _Create a data frame with just your five variables of interest (census rates plus polsby_scale), and remove the geometry column (hint: see the st_set_geometry() function from earlier this semester). Then use rcorr to create a correlation matrix with the appropriate measure (Spearman or Pearson). Remember that you'll need to convert the dataframe to a matrix._
 
 ```{r}
 #Code goes here.
 ```
 
-**Question 7 (2 points)** _Interpret the results your correlation matrix shows, focusing on both the magnitude and direction of the correlation._
+**Question 7 (2 points)** _Interpret the results your correlation matrix shows. Thinking about magnitude, direction, and significance, what variables are mostly closely correlated? What variables are most strongly associated with the polsby_scale variable?_
+
+{Text here}
 
 ### Part 3: OLS Regression
 
 Lastly, we'll use regression to determine how the census variables in this dataset are associated with the compactness of political districts.
 
-**Question 8 (3 points)** *Create a data frame that has the five variables of interest and the geometry column. Create an OLS regression model from this data frame that has the Polsby compactness score as the dependent variable and the others as dependent variables. Call a summary of the model so your results appear in the response document.*
+**Question 8 (3 points)** *Create an OLS regression model from the data you used for question 5, using the scaled Polsby compactness score as the dependent variable and the others as dependent variables. Call a summary of the model so your results appear in the response document.*
 
 ```{r}
 #Code goes here.
@@ -124,7 +124,9 @@ Lastly, we'll use regression to determine how the census variables in this datas
 #Code goes here.
 ```
 
-**Question 12 (3 points)** *Based on your results, assess how either the spatial/statistical distribution of residuals or tests for heterosketasticity may show a problem with this model. Provide one recommendation for a way this model could be improved.*
+**Question 12 (3 points)** *Based on your results, assess how either the spatial/statistical distribution of residuals or tests for heterosketasticity may show a problem with this model.*
 
 {Response goes here}
 
+**Extra credit (2 points):**
+Create another visualization of the polsby_scale variable that shows its distribution by state or its association with one or more census variables. Write a few sentences to explain what you think this visualization communicates.
