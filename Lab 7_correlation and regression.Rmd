@@ -9,124 +9,80 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## R Markdown
 
-## Correlation and regression
+## Regression
 
 **Value:** 30 points
-
-**Overview:**
-This lab introduces you to NHGIS and the type of analysis you may be doing in your final project this semester. You'll also be applying techniques for correlation and OLS regression. Think of this as the first taste of your final project.
-
-###Part 1: Importing data and descriptive statistics###
-For this lab, we'll be looking at American Community Survey data for congressional precincts from the 2011-2015 pooled sample. You can access this and pretty much all census data through the IPUMS NHGIS website: https://www.nhgis.org. For this lab, the data's already been downloaded for you. The boundary file has also been simplified to speed plotting of the data.
-
-There's three files for you to use in this analysis: [a codebook with metadata](https://github.com/jshannon75/geog4300/raw/master/Labs/Lab%205_%20Correlation%20and%20regression/nhgis0052_ds215_20155_2015_cd113th-114th_codebook.txt), a csv file, and a GIS boundary file in geojson format. You can load the two files using the following commands. You'll also need to load the development version of ggplot for plotting spatial data, so uncomment that line if you haven't done it already.
 
 ```{r setup, message=FALSE, warning=FALSE}
 library(sf)
 library(tidyverse)
-census_data<-read_csv("data/nhgis0052_ds215_20155_2015_cd113th-114th.csv")
-census_shape<-st_read("data/districts_2012.geojson", quiet=TRUE) %>% 
-  st_transform(5070) #Changes to a appropriate projection--US Albers Equal Area
 ```
 
-You already mapped spatial data with ggplot earlier this semester, but as a reminder, it looks something like this. We are mapping a normalized version of the Polsby-Popper metric of district compactness, often used for identifying potential gerrymanders [link](https://www.azavea.com/blog/2016/07/11/measuring-district-compactness-postgis). 
+**Overview:**
+This lab focuses on regression techniques. You'll be analyzing the association of county demographics on the presidential vote in 2012 (the Obama-Romney election).
 
-Note that here, we're using scale_fill_viridis_c from the viridis library, which imports the color schemes of Matlab for continuous data. You can use that as well if you'd like.
+###Part 1: Importing data and descriptive statistics###
+This lab uses the same county data file you used in Lab 6. You also have a county shapefile that we'll use for mapping these results.
 
-```{r sf_data_plot}
-ggplot(census_shape) +
-  geom_sf(aes(fill=polsby_scale))+
-  scale_fill_viridis_c()
-```
-
-Working with the data file, select only the following variables needed for your analysis. Refer to the codebook document to find the variable names in the dataset:
-
-* GISJOIN and STATE fields
-* Race: Total population, Non-Hispanic White, Non-Hispanic Black/African-American, and Hispanic or Latino
-* Poverty: Total population, Population at 200% or more of the poverty line
-
-Now create rates from these data, using the raw counts and the total population using mutate. You should end up with the following variables:
-
-* % non-Hispanic white
-* % non-Hispanic black
-* % Hispanic/Latino
-* % < 200% of the poverty line
-
-**Question 1 (2 points)** _Create a table for each county showing only the GISJOIN,STATE and rate variables listed above. Call the header of the resulting table when done._
+**Question 1 (2 points)** _Load the two files listed above--the election data and county level shapefile. Filter the election data for just the 2012 election, then join it to the county shapefile._
 
 ```{r}
 #Code goes here.
 ```
 
-You can now connect your table with the geographic boundaries you imported in question 1. After doing so, you can plot each variable on a small multiples map using ggplot.
+For this analysis, you'll be looking at the following variables:
 
-**Question 2 (3 points)** _Join the district boundaries to the table from question 1.  Then scale the rates to create z scores. This will create a consistent range of values across variables for the next step of the process. Call the head of the table when done._
+*gop_pct: The % of vote for Romney (the Republican) in 2012
+*medinc: Median household income
+*wht_pop_pct: % of population classified as white
+*ed_graddeg_pct: % of the population whose highest educational attainment is a graduate degree.
+
+You'll be evaluating how each of the last three variables was associated with the county's Republican vote in 2012. To start with, you should assess the distribution of each variable
+
+**Question 2 (3 points + XC)** _Create a qqplot for each of the four variables of interest. For 1 point extra credit, use the stat_qq and stat_qq_line functions in ggplot to do so. See the documentation for details. Based on these graphs, assess the normality of these variables._
 
 ```{r}
 #Code goes here.
 ```
 
-**Question 3 (3 points)** _Use gather to transform the four scaled census variables to long format so you can plot them. Then, using facet_wrap with ggplot and geom_sf, plot the distribution of each of the four scaled census variables on a single small multiples map_
+{Your assessment of the variables' normality goes here.}
 
-```{r}
-#Code goes here.
-```
+**Question 3 (2 points)** _Use tmap to map the four variables of interest using Jenks natural breaks as the classification method._
 
 **Question 4 (3 points)** _Based on the map from question 3, summarise two major patterns you see in the spatial distribution of these data. Be sure to make specific references to your data to illustrate your points._
 
-{Response goes here}
-
-###Part 2: Correlation###
-
-Next, you'll be assessing the correlation of these variables. We'll want to remove counties in states with very few disticts (2 or less), as gerrymandering options are limited in these states
-
-**Question 5 (3 points):** _Filter out any states with 2 or less districts--you can use the STATEFP or STATE variables to group them. Then assess the normality of your five variables of interest (four census variables and the polsby_scale variable) using qq plots. Explain how your results suggest the use of parametric or non-parametric statistical tests._ 
+**Question 5 (3 points)** _Create univariate regression models for each of the independent variables (income, % white, and % w/graduate degree. Make sure the results of each model are visible._
 
 ```{r}
 #Code goes here.
 ```
 
-{Response goes here}
+**Question 6 (3 points)** _Summarize the results of the model in question 5, focusing on the direction and significance of the model coefficients, the model residuals, and the overall R2 value._
 
-**Question 6 (2 points)** _Create a data frame with just your five variables of interest (census rates plus polsby_scale), and remove the geometry column (hint: see the st_set_geometry() function from earlier this semester). Then use rcorr to create a correlation matrix with the appropriate measure (Spearman or Pearson). Remember that you'll need to convert the dataframe to a matrix._
-
-```{r}
-#Code goes here.
-```
-
-**Question 7 (2 points)** _Interpret the results your correlation matrix shows. Thinking about magnitude, direction, and significance, what variables are mostly closely correlated? What variables are most strongly associated with the polsby_scale variable?_
-
-{Text here}
-
-### Part 3: OLS Regression
-
-Lastly, we'll use regression to determine how the census variables in this dataset are associated with the compactness of political districts.
-
-**Question 8 (3 points)** *Create an OLS regression model from the data you used for question 5, using the scaled Polsby compactness score as the dependent variable and the others as dependent variables. Call a summary of the model so your results appear in the response document.*
+**Question 7 (2 points)** _Create a multivariate regression model with all three variables of interest and call the results._
 
 ```{r}
-#Code goes here.
+#Code goes here
 ```
 
-**Question 9 (2 points)** *Interpret your regression model, focusing on the magnitude, direction, and significance of model coefficients and the overall power of the model.*
+**Question 8 (4 points)** _Summarise the results of the multivariate model. What are the direction, magnitude, and significance of each coefficient, and how did it change from the univariate models (if at all)? What do the R2 and F-statistic values tell you about overall model fit?_
 
 {Response goes here}
 
-**Question 10 (2 points)** _Check your for the normality of residuals and heterosketasticity using the tests described in class._ 
+**Question 9 (3 points)** _Use a qq plot and a map to assess the normality of residuals and their spatial distribution. Summarise any notable patterns that you see._
 
 ```{r}
-#Code goes here.
+#Code goes here
 ```
 
-**Question 11 (2 points)** _Add the residuals as a new variable in your model data and plot their spatial distribution using ggplot._
+{Summary goes here}
+
+**Question 10 (3 points)** _Assess any issues with multicollinearity or heteroskedastity in this model using the techniques shown in class. Run the appropriate tests and explain what their results show you._
 
 ```{r}
-#Code goes here.
+#Code goes here
 ```
 
-**Question 12 (3 points)** *Based on your results, assess how either the spatial/statistical distribution of residuals or tests for heterosketasticity may show a problem with this model.*
+{Interpretation goes here}
 
-{Response goes here}
-
-**Extra credit (2 points):**
-Create another visualization of the polsby_scale variable that shows its distribution by state or its association with one or more census variables. Write a few sentences to explain what you think this visualization communicates.
+**Question 11 (2 points)** _Overall, explain what this model tells you about the relationship of these variables. How would you summarize the model results to a friend?_
