@@ -49,7 +49,17 @@ You'll be evaluating how each of the last three variables was associated with th
 
 **Question 3 (2 points)** _Use tmap to map the four variables of interest using Jenks natural breaks as the classification method._
 
+```{r}
+
+```
+
+
 **Question 4 (3 points)** _Based on the map from question 3, summarise two major patterns you see in the spatial distribution of these data. Be sure to make specific references to your data to illustrate your points._
+
+```{r}
+
+```
+
 
 **Question 5 (3 points)** _Create univariate regression models for each of the independent variables (income, % white, and % w/graduate degree. Make sure the results of each model are visible._
 
