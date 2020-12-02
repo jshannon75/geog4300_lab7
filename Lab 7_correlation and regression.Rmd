@@ -32,12 +32,12 @@ This lab uses the same county data file you used in Lab 6. You also have a count
 
 For this analysis, you'll be looking at the following variables:
 
-*gop_pct: The % of vote for Romney (the Republican) in 2012
-*medinc: Median household income
-*wht_pop_pct: % of population classified as white
-*ed_graddeg_pct: % of the population whose highest educational attainment is a graduate degree.
+* gop_pct: The % of vote for Romney (the Republican) in 2012
+* medinc: Median household income
+* wht_pop_pct: % of population classified as white
+* ed_graddeg_pct: % of the population whose highest educational attainment is a graduate degree.
 
-You'll be evaluating how each of the last three variables was associated with the county's Republican vote in 2012. To start with, you should assess the distribution of each variable
+You'll be evaluating how each of the last three variables was associated with the county's Republican vote in 2012. To start with, you should assess the distribution of each variable.
 
 **Question 2 (3 points + XC)** _Create a qqplot for each of the four variables of interest. For 1 point extra credit, use the stat_qq and stat_qq_line functions in ggplot to do so. See the documentation for details. Based on these graphs, assess the normality of these variables._
 
@@ -56,9 +56,7 @@ You'll be evaluating how each of the last three variables was associated with th
 
 **Question 4 (3 points)** _Based on the map from question 3, summarise two major patterns you see in the spatial distribution of these data. Be sure to make specific references to your data to illustrate your points._
 
-```{r}
-
-```
+{Your response here.}
 
 
 **Question 5 (3 points)** _Create univariate regression models for each of the independent variables (income, % white, and % w/graduate degree. Make sure the results of each model are visible._
@@ -67,7 +65,7 @@ You'll be evaluating how each of the last three variables was associated with th
 #Code goes here.
 ```
 
-**Question 6 (3 points)** _Summarize the results of the model in question 5, focusing on the direction and significance of the model coefficients, the model residuals, and the overall R2 value._
+**Question 6 (3 points)** _Summarize the results of the models in question 5, focusing on the direction and significance of the model coefficients, the model residuals, and the overall R2 value._
 
 **Question 7 (2 points)** _Create a multivariate regression model with all three variables of interest and call the results._
 
@@ -79,7 +77,7 @@ You'll be evaluating how each of the last three variables was associated with th
 
 {Response goes here}
 
-**Question 9 (3 points)** _Use a qq plot and a map to assess the normality of residuals and their spatial distribution. Summarise any notable patterns that you see._
+**Question 9 (3 points)** _Use a qq plot and a map to assess the normality of residuals and any spatial clustering. Summarise any notable patterns that you see._
 
 ```{r}
 #Code goes here
@@ -95,4 +93,4 @@ You'll be evaluating how each of the last three variables was associated with th
 
 {Interpretation goes here}
 
-**Question 11 (2 points)** _Overall, explain what this model tells you about the relationship of these variables. How would you summarize the model results to a friend?_
+**Question 11 (2 points)** _Looking at the full model and your diagnostics, do you feel this is a model that provides meaningful results? Explain your answer. What's one issue that should be improved if continuing to develop this model?_
