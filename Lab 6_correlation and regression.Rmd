@@ -1,5 +1,5 @@
 ---
-title: 'Geog6300: Lab 7'
+title: 'Geog6300: Lab 6'
 output: github_document
 ---
 
@@ -93,6 +93,23 @@ You'll be evaluating how each of the last three variables was associated with th
 
 {Interpretation goes here}
 
-**Question 11** _Looking at the full model and your diagnostics, do you feel this is a model that provides meaningful results? Explain your answer. If you were going to add one additional variable to this model, what would it be and why?_
+**Question 11** _Looking at the full model and your diagnostics, do you feel this is a model that provides meaningful results? Explain your answer._
 
-**Lab reflection:** _How do you feel about the work you did on this lab? Was it easy, moderate, or hard? What were the biggest things you learned by completing it? How would you rate it low pass/pass/high pass)?_
+**Lab reflection:** _How do you feel about the work you did on this lab? Was it easy, moderate, or hard? What were the biggest things you learned by completing it?_
+
+
+**Bonus challenge**
+There's lots of controversy over election maps, as choropleth versions can overemphaize land area compared to population. For this bonus challenge, map some aspect of these election results (for example, gop or dem vote, the margin between them, or any other variable you might create) using one of the following techniques:
+
+* Cartograms: https://cran.r-project.org/web/packages/cartogram/readme/README.html
+* Dot density maps: https://rpubs.com/mathetal/dotdensity
+* Bivariate maps (maybe with a demographic variable): https://cran.r-project.org/web/packages/biscale/vignettes/biscale.html
+
+Alternatively, create your own visualization of these election data using ggplot that isn't a choropleth map (or even a map at all). Post your map below and explain what you like about it.
+
+```{r}
+#Code goes here
+```
+
+{Interpretation goes here.}
+
