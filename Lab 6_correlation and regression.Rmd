@@ -47,7 +47,7 @@ You'll be evaluating how each of the last three variables was associated with th
 
 {Your assessment of the variables' normality goes here.}
 
-**Question 3** _Use tmap to map the four variables of interest using Jenks natural breaks as the classification method For an extra, optional challenge, you can dissolve the counties to state boundaries using group_by (with the state variable)and summarise. Add these boundaries to your maps and reduce the opacity of the county boundaries using the border.alpha parameter._
+**Question 3** _Use tmap to map the four variables of interest using Jenks natural breaks as the classification method For an extra, optional challenge, you can add the state boundaries as well. To do this, create a new object where you dissolve the counties to state boundaries using group_by (with the state variable)and summarise. Add these boundaries to your county maps and reduce the opacity of the county boundaries using the border.alpha parameter._
 
 ```{r}
 
@@ -65,7 +65,7 @@ You'll be evaluating how each of the last three variables was associated with th
 #Code goes here.
 ```
 
-**Question 6** _Summarize the results of the models in question 5, focusing on the direction and significance of the model coefficients, the normality of model residuals, and the overall R2 value._
+**Question 6** _Interpret the results of the models in question 5, focusing on the direction and significance of the model coefficients, the normality of model residuals, and the overall R2 value._
 
 **Question 7** _Create a multivariate regression model with all three variables of interest and call the results._
 
