@@ -11,8 +11,6 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Regression
 
-**Value:** 30 points
-
 ```{r setup, message=FALSE, warning=FALSE}
 library(sf)
 library(tidyverse)
@@ -65,19 +63,17 @@ You'll be evaluating how each of the last three variables was associated with th
 #Code goes here.
 ```
 
-**Question 6** _Interpret the results of the models in question 5, focusing on the direction and significance of the model coefficients, the normality of model residuals, and the overall R2 value._
-
-**Question 7** _Create a multivariate regression model with all three variables of interest and call the results._
+**Question 6** _Create a multivariate regression model with all three variables of interest and call the results._
 
 ```{r}
 #Code goes here
 ```
 
-**Question 8** _Summarise the results of the multivariate model. What are the direction, magnitude, and significance of each coefficient, and how did it change from the univariate models (if at all)? What do the R2 and F-statistic values tell you about overall model fit?_
+**Question 7** _Summarise the results of the multivariate model. What are the direction, magnitude, and significance of each coefficient, and how did it change from the univariate models you created in Q6 (if at all)? What do the R2 and F-statistic values tell you about overall model fit?_
 
 {Response goes here}
 
-**Question 9** _Use a QQ plot and a map to assess the normality of residuals and any spatial autocorrelation. Summarise any notable patterns that you see._
+**Question 8** _Use a QQ plot and a map to assess the normality of residuals and any spatial autocorrelation. Summarise any notable patterns that you see._
 
 ```{r}
 #Code goes here
@@ -85,7 +81,7 @@ You'll be evaluating how each of the last three variables was associated with th
 
 {Summary goes here}
 
-**Question 10** _Assess any issues with multicollinearity or heteroskedastity in this model using the techniques shown in class. Run the appropriate tests and explain what their results show you._
+**Question 9** _Assess any issues with multicollinearity or heteroskedastity in this model using the techniques shown in class. Run the appropriate tests and explain what their results show you._
 
 ```{r}
 #Code goes here
@@ -93,7 +89,7 @@ You'll be evaluating how each of the last three variables was associated with th
 
 {Interpretation goes here}
 
-**Question 11** _Looking at the full model and your diagnostics, do you feel this is a model that provides meaningful results? Explain your answer._
+**Question 10** _Looking at the full model and your diagnostics, do you feel this is a model that provides meaningful results? Explain your answer._
 
 **Lab reflection:** _How do you feel about the work you did on this lab? Was it easy, moderate, or hard? What were the biggest things you learned by completing it?_
 
