@@ -16,11 +16,13 @@ library(tmap)
 
 ## Clustering
 
-In this short ungraded lab, you will be downloading data from U.S. Census for Georgia census tracts and using hierarchical clustering to identify areas with similar characteristics across the state. This type of process is commonly used to classify regions or identify market segmentation.
+In this short lab, you will be downloading data from U.S. Census for Georgia census tracts and using hierarchical clustering to identify areas with similar characteristics across the state. This type of process is commonly used to classify regions or identify market segmentation.
 
 Let's start by downloading census data from the 2016-2020 American Community Survey. You'll need to have already installed the U.S. Census API to do so. In this case, I'm going to use median household income for several racial classifications, commuting times (travel time to work), % with a Bachelor's degree, access to broadband, and median age. 
 
 Feel free to play around with this code to choose different variables if you like--just remember to transform population counts to rates. It's not terribly hard to find other variables you might like to include.
+
+If you have troubles with tidycensus, you can just use the "ga_tracts_wide.csv" file included in the `data` folder. That would replace lines 28-42 in the code below.
 
 ```{r}
 #Get full variable list
@@ -56,7 +58,7 @@ ga_tracts_sample<-ga_tracts_wide %>%
 ga_tracts_sample<-na.omit(ga_tracts_sample)
 ```
 
-We'll also load the centroids of census tracts using tidycensus. We'll load just the count of total population.
+We'll also load the centroids of census tracts using tidycensus. We'll load just the count of total population. Again, if you have trouble, just load the "tct_centroids.gpkg" file in the data folder.
 
 ```{r}
 tct_centroids<-get_acs(geography="tract",state="GA",var="B01001_001",geometry=TRUE,year=2020) %>%
@@ -75,7 +77,7 @@ Now that we have a dataset create clusters from these variables using HCA
 #Code here
 ```
 
-**Question 2** _Create a distance matrix for the variables you selects using the `dist` function and then plot a dendogram from that matrix. Identify the number of clusters you would like to use in this analysis and create a bounding box using `rect.hclust`. Explain why you chose the number of clusters you did._
+**Question 2** _The first step of hca clustering: create a distance matrix for the variables you selects using the `dist` function and then plot a dendogram from that matrix. Identify the number of clusters you would like to use in this analysis and create a bounding box using `rect.hclust`. Explain why you chose the number of clusters you did._
 
 ```{r}
 #Code here
@@ -106,3 +108,15 @@ Now that we have a dataset create clusters from these variables using HCA
 **Question 6** _Based on these boxplots, give a name to each of your clusters. Briefly explain each one_
 
 {Discussion here.}
+
+**Lab reflection:** _How do you feel about the work you did on this lab? Was it easy, moderate, or hard? What were the biggest things you learned by completing it?_
+
+{Your response}
+
+**Challenge question** _Repeat the process above with *k-means clustering* and the same number of clusters. Based on the map you create and the boxplots of the variables (see Q4 and 5), note any similarities or differences you see in the results compared to HCA._
+
+```{r}
+#Code here
+```
+
+{Analysis here}
