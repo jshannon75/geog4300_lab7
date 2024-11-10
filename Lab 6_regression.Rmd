@@ -1,13 +1,13 @@
 ---
 title: 'Geog6300: Lab 6'
 output: github_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-
-## R Markdown
 
 ## Regression
 
@@ -17,27 +17,35 @@ library(tidyverse)
 ```
 
 **Overview:**
-This lab focuses on regression techniques. You'll be analyzing the association of county demographics on the presidential vote in 2012 (the Obama-Romney election).
+This lab focuses on regression techniques. You'll be analyzing the association of various physical and climatological characteristics in Australia with observations of several animals recorded on the citizen science app iNaturalist.
 
-###Part 1: Importing data and descriptive statistics###
-This lab uses the same county data file you used in Lab 6. You also have a county shapefile that we'll use for mapping these results.
+###Data and research questions###
 
-**Question 1** _Load the two files in the data folder--the election data and county level shapefile. Filter the election data for just the 2012 election, then join it to the county shapefile. Call the head of this data frame using kable when you are done._
+Let's import the dataset.
 
 ```{r}
-#Code goes here.
+lab6_data<-st_read("data/aus_climate_inat.gpkg")
 ```
 
-For this analysis, you'll be looking at the following variables:
+The dataset for this lab is a 1 decimal degree hexagon grid that has aggregate statistics for a number of variables:
 
-* gop_pct: The % of vote for Romney (the Republican) in 2012
-* medinc: Median household income
-* wht_pop_pct: % of population classified as white
-* ed_graddeg_pct: % of the population whose highest educational attainment is a graduate degree.
+* ndvi: NDVI/vegetation index values from Landsat data (via Google Earth Engine). These values range from -1 to 1, with higher values indicating more vegetation.
+* maxtemp_00/20_med: Median maximum temperature (C) in 2000 or 2020 (data from SILO/Queensland government)
+* mintemp_00/20_med: Median minimum temperature (C) in 2020 or 2020 (data from SILO/Queensland government)
+* rain_00/20_sum: Total rainfall (mm) in 2000 or 2020 (data from SILO/Queensland government)
+* pop_00/20: Total population in 2000 or 2020 (data from NASA's Gridded Population of the World)
+* water_00/20_pct: Percentage of land covered by water at some point during the year in 2000 or 2020
+* elev_med: Median elevation (meters) (data from the Shuttle Radar Topography Mission/NASA)
 
-You'll be evaluating how each of the last three variables was associated with the county's Republican vote in 2012. To start with, you should assess the distribution of each variable.
+There are also observation counts from iNaturalist for several distinctively Australian animal species: the central bearded dragon, the common emu, the red kangaroo, the agile wallaby, the laughing kookaburra, the wombat, the koala, and the platypus.
 
-**Question 2** _Create a QQ plot for each of the four variables of interest. Based on these graphs, assess the normality of these variables._
+Our primary research question is how the climatological/physical variables in our dataset are predictive of the NDVI value. We will build models for 2020 as well as the change from 2000 to 2020. The second is referred to as a "first difference" model and can sometimes be more useful for identifying causal mechanisms.
+
+###Part 1: Analysis of 2020 data###
+
+We will start by looking at data for 2020. 
+
+**Question 1** _Create histograms for NDVI, max temp., min temp., rain, and population, and water in 2020 as well as elevation. Based on these graphs, assess the normality of these variables._
 
 ```{r}
 #Code goes here.
@@ -45,35 +53,36 @@ You'll be evaluating how each of the last three variables was associated with th
 
 {Your assessment of the variables' normality goes here.}
 
-**Question 3** _Use tmap to map the four variables of interest using Jenks natural breaks as the classification method For an extra, optional challenge, you can add the state boundaries as well. To do this, create a new object where you dissolve the counties to state boundaries using group_by (with the state variable)and summarise. Add these boundaries to your county maps and reduce the opacity of the county boundaries using the border.alpha parameter._
+**Question 2** _Use tmap to map these same variables using Jenks natural breaks as the classification method. For an extra challenge, use `tmap_arrange` to plot all maps in a single figure._
 
 ```{r}
 
 ```
 
 
-**Question 4** _Based on the maps from question 3, summarise two major patterns you see in the spatial distribution of these data from any of your variables of interest. Be sure to make specific references to your data to illustrate your points._
+**Question 3** _Based on the maps from question 3, summarise major patterns you see in the spatial distribution of these data from any of your variables of interest. How do they appear to be associated with the NDVI variable?_
 
 {Your response here.}
 
-
-**Question 5** _Create univariate regression models for each of the independent variables (income, % white, and % w/graduate degree) using % voting GOP as the dependent variable. Make sure the results of each model are visible._
+**Question 4** _Create univariate models for each of the variables listed in question 1, with NDVI in 2020 as the dependent variable. Print a summary of each model. Write a summary of those results that indicates the direction, magnitude, and significance for each model coefficient._
 
 ```{r}
-#Code goes here.
+
 ```
 
-**Question 6** _Create a multivariate regression model with all three variables of interest and call the results._
+{Discussion here}
+
+**Question 5** _Create a multivariate regression model with the variables of interest, choosing EITHER max or min temperature (but not both) You may also choose to leave out any variables that were insignificant in Q4. Use the univariate models as your guide. Call the results._
 
 ```{r}
 #Code goes here
 ```
 
-**Question 7** _Summarise the results of the multivariate model. What are the direction, magnitude, and significance of each coefficient, and how did it change from the univariate models you created in Q6 (if at all)? What do the R2 and F-statistic values tell you about overall model fit?_
+**Question 6** _Summarize the results of the multivariate model. What are the direction, magnitude, and significance of each coefficient? How did it change from the univariate models you created in Q4 (if at all)? What do the R2 and F-statistic values tell you about overall model fit?_
 
 {Response goes here}
 
-**Question 8** _Use a QQ plot and a map to assess the normality of residuals and any spatial autocorrelation. Summarise any notable patterns that you see._
+**Question 7** _Use a histogram and a map to assess the normality of residuals and any spatial autocorrelation. Summarise any notable patterns that you see._
 
 ```{r}
 #Code goes here
@@ -81,7 +90,7 @@ You'll be evaluating how each of the last three variables was associated with th
 
 {Summary goes here}
 
-**Question 9** _Assess any issues with multicollinearity or heteroskedastity in this model using the techniques shown in class. Run the appropriate tests and explain what their results show you._
+**Question 8** _Assess any issues with multicollinearity or heteroskedastity in this model using the techniques shown in class. Run the appropriate tests and explain what their results show you._
 
 ```{r}
 #Code goes here
@@ -89,23 +98,38 @@ You'll be evaluating how each of the last three variables was associated with th
 
 {Interpretation goes here}
 
-**Question 10** _Looking at the full model and your diagnostics, do you feel this is a model that provides meaningful results? Explain your answer._
+**Question 9** _How would you summarise the results of this model in a sentence or two? In addition, looking at the full model and your diagnostics, do you feel this is a model that provides meaningful results? Explain your answer._
+
+```{r}
+Discussion here
+```
+
+
+**Disclosure of assistance:** _Besides class materials, what other sources of assistance did you use while completing this lab? These can include input from classmates, relevant material identified through web searches (e.g., Stack Overflow), or assistance from ChatGPT or other AI tools. How did these sources support your own learning in completing this lab?_
+
+{Response here.}
 
 **Lab reflection:** _How do you feel about the work you did on this lab? Was it easy, moderate, or hard? What were the biggest things you learned by completing it?_
 
+{Discussion here.}
 
-**Bonus challenge**
-There's lots of controversy over election maps, as choropleth versions can overemphaize land area compared to population. For this bonus challenge, map some aspect of these election results (for example, gop or dem vote, the margin between them, or any other variable you might create) using one of the following techniques:
 
-* Cartograms: https://cran.r-project.org/web/packages/cartogram/readme/README.html
-* Dot density maps: https://rpubs.com/mathetal/dotdensity
-* Bivariate maps (maybe with a demographic variable): https://cran.r-project.org/web/packages/biscale/vignettes/biscale.html
+**Challenge question**
 
-Alternatively, create your own visualization of these election data using ggplot that isn't a choropleth map (or even a map at all). Post your map below and explain what you like about it.
+#Option 1
+Create a first difference model. To do that, subtract the values in 2000 from the values in 2020 for each variable for which that is appropriate. Then create a new model similar to the one you created in question 5, but using these new variables showing the *change in values* over time. Call the results of the model, and interpret the results in the same ways you did above. Also chart and map the residuals to assess model error. Finally, write a short section that summarises what, if anything, this model tells you. 
 
 ```{r}
-#Code goes here
+
 ```
 
-{Interpretation goes here.}
+
+
+
+#Option 2
+The animal data included in this dataset is an example of count data, and usually we would use a Poisson or similar model for that purpose. Let's try it with regular OLS regression though. Create two regression models to assess how the counts of two different animals (say, koalas and emus) are associated with at least three of the environmental/climatological variables given above. Be sure to use the same independent variables in each model. Interpret the results of each model and then explain the importance of any differences in the model coefficients between them, focusing on direction, magnitude, and significance.
+
+```{r}
+
+```
 
